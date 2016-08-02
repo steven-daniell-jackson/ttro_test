@@ -22,7 +22,7 @@ function pyramid ($fnc_pyramid_character, $fnc_pyramid_size) {
 	// Used for "str_repeat()", just to make it look cleaner
 	$spacer = "&nbsp;";
 
-	// Used to add the correct amount of spacing before the character based on the double the pyramid's size 
+	// Used to add the correct amount of spacing before the character based on double the pyramid's size 
 	$spacingCounter = $fnc_full_pyramid_size;
 
 
