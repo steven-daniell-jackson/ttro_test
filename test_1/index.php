@@ -62,7 +62,7 @@ function pyramid ($fnc_pyramid_character, $fnc_pyramid_size) {
 
 	<form action="index.php" method="GET">
 		<label for="specialCharacter">Enter the special character: </label>
-		<input type="text" pattern="[^0-9]*" name="specialCharacter" title="Only characters allowed" required>
+		<input type="text" pattern="[^0-9]*" name="specialCharacter" title="Only characters allowed" maxlength="1" required>
 
 		<br><br>
 		<label for="size">Enter the special character: </label>
