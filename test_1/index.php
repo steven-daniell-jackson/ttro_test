@@ -1,29 +1,5 @@
 <?php 
 
-/*
-Written by Steven Jackson - 2 August 2016
-
-Test provided by The Training Room Online
-
-Test Description:
-
-Create a function that allows the user to enter a character (e.g. '*')
-Then they choose a number 4,6,8 or 10.
-The function must then create a pyramid using the character and the number that the user entered will be the number of lines of the pyramid.
-The pyramid must be symmetrical. 
-There must be 1 character at the top. 
-
-Example:
-Inputs:  '*' , '4'
-output:
-
-   *
-  ***
- *****
-*******
-
-*/
-
 
 // Get HTTP Variables from form input
 if (isset($_GET["specialCharacter"])) {
@@ -116,3 +92,31 @@ function pyramid ($fnc_pyramid_character, $fnc_pyramid_size) {
 	</body>
 	</html>
 
+<?php 
+
+
+/*
+Written by Steven Jackson - 2 August 2016
+
+Test provided by The Training Room Online
+
+Test Description:
+
+Create a function that allows the user to enter a character (e.g. '*')
+Then they choose a number 4,6,8 or 10.
+The function must then create a pyramid using the character and the number that the user entered will be the number of lines of the pyramid.
+The pyramid must be symmetrical. 
+There must be 1 character at the top. 
+
+Example:
+Inputs:  '*' , '4'
+output:
+
+   *
+  ***
+ *****
+*******
+
+*/
+
+ ?>
