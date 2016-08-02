@@ -1,22 +1,5 @@
 <?php 
 /*
-Written by Steven Jackson - 2 August 2016
-
-Test provided by The Training Room Online
-
-Test Description:
-Create a script that sorts the following words by length from the shortest to the longest words. Create a function to make all of the words sentence case.
-
-truck
-cat
-marshmallows
-elevator
-Berlin
-
-*/
-
-/*
-
 ASSUMPTION:
 Not sure what the input type is so I just created an simple array which contains the original words.
 Used a decoded json array for the example.
@@ -72,25 +55,6 @@ foreach ($arr_words as $word) {
 }
 
 
-/*
-**************************
-	DESCENDING ORDER 
-**************************
-*/
-
-
-// Sort on custom result from array_sort_length function and overwrite existing
-
-// echo "<h3>Sorted Array on String lengths in Descending order</h3>";
-
-// usort($arr_words, "array_sort_desc_length");
-
-// foreach ($arr_words as $word) {
-// 	echo $word . "<br>";
-// }
-
-
-
 
 /*
 **************************
@@ -110,6 +74,23 @@ foreach ($arr_first_uppercase as  $value) {
 }
 
 
+
+/*
+*******************************
+	BONUS - DESCENDING ORDER 
+*******************************
+*/
+
+
+// Sort on custom result from array_sort_length function and overwrite existing
+
+// echo "<h3>Sorted Array on String lengths in Descending order</h3>";
+
+// usort($arr_words, "array_sort_desc_length");
+
+// foreach ($arr_words as $word) {
+// 	echo $word . "<br>";
+// }
 
 
 
@@ -153,6 +134,26 @@ function array_sort_desc_length($first, $second) {
 	return strlen($second) - strlen($first);
 }
 
+
+
+
+
+
+/*
+Written by Steven Jackson - 2 August 2016
+
+Test provided by The Training Room Online
+
+Test Description:
+Create a script that sorts the following words by length from the shortest to the longest words. Create a function to make all of the words sentence case.
+
+truck
+cat
+marshmallows
+elevator
+Berlin
+
+*/
 
 
 
