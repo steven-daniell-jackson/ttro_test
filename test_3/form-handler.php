@@ -13,20 +13,55 @@ require ("config.php");
 $email = isset($_POST['email']) ? $_POST['email'] : null;
 $password = isset($_POST['password']) ? $_POST['password'] : null;
 $hobbies = isset($_POST['hobbies']) ? $_POST['hobbies'] : null;
-$image = isset($_POST['image']) ? $_POST['image'] : null;
+$image_details = isset($_FILES['image']) ? $_FILES['image'] : null;
 
-echo $email;
 
-$image_details = "123";
 $confirm_number = gen_rand_confirm_link(13);
+// echo $confirm_number;
 
-echo $confirm_number;
+
+
 
 /*
 **************************
 	VALIDATION
 **************************
 */
+
+// Debug 
+print_r($image_details);
+echo "<br><br>";
+
+
+// ERROR - NOT WORKING WITH BIGGER IMAGES - Possibilities is Wamp upload limit 
+
+// echo $_FILES["image"]["size"] . "<br>";
+
+// $maxFileSize = MAX_IMAGE_SIZE_MB * 1024 * 1024;
+// if ($_FILES["image"]["size"] > $maxFileSize ) {
+// 	echo "too big <br><br>";
+// }
+// ERROR - END
+
+
+// Check image dimensions
+$image_dimensions = getimagesize($_FILES["image"]["tmp_name"]);
+$image_width = $image_dimensions[0];
+$image_height = $image_dimensions[1];
+
+// Image orientation
+$image_orientation = ($image_width > $image_height)? "Landscape": "Portait";
+
+
+if (!file_exists('images')) {
+    mkdir('images', 0777, true);
+}
+
+
+// Move to images directory
+move_uploaded_file($_FILES['image']['tmp_name'], 'images/ '. $_FILES['image']['name']);
+
+
 
 
 
@@ -77,7 +112,7 @@ echo $confirm_number;
 
 // COPIED FROM https://www.xeweb.net/2011/02/11/generate-a-random-string-a-z-0-9-in-php/
 function gen_rand_confirm_link($length) {
-	
+
 	$str = "";
 
 	// Combines character range into a characters  array
@@ -91,7 +126,7 @@ function gen_rand_confirm_link($length) {
 
 		// Chooses a rand number within the array and concatenates the $str variable
 		$rand = mt_rand(0, $arr_max);
-		$str .= $characters[$rand];
+		$str .= $arr_characters[$rand];
 	}
 
 	// Return value
