@@ -37,78 +37,44 @@ function image_validation($image) {
 
 /****************************************************************************
  Additional layer of error handling incase the input in the DOM is modified 
-*****************************************************************************/
-
-// Acceptable file types
-$arr_image_extension = ['jpg','png'];
-
-
-// Get extension and convert to lower case
-$extension = substr($image['name'], strpos($image['name'], '.') + 1);
-$extension = strtolower($extension);
-
-
-// Double check the extension name. Only accepts jpg and png
-if ( !in_array($extension, $arr_image_extension) ) {
-	echo "ERROR - Incorrect format <br>";
-	echo "$extension is not the correct file type<br>";
-	echo "Needs to be either jpg or png";
-	exit();
-}
-
+ *****************************************************************************/
+ image_extension_validator ($image);
 
 /****************************
   SIZE VALIDATION FUNCTION 
-*****************************/
+  *****************************/
+  image_file_size($image);
 
-// ERROR - NOT WORKING WITH BIGGER IMAGES - Possibilities is Wamp upload limit 
-
-
-// echo $_FILES["image"]["size"] . "<br>";
-
-// $maxFileSize = MAX_IMAGE_SIZE_MB * 1024 * 1024;
-// if ($_FILES["image"]["size"] > $maxFileSize ) {
-// 	echo "too big <br><br>";
-// }
-// ERROR - END
-
-
-
-
-
-/****************************
-  MAIN FUNCTION 
-*****************************/
 
 // Register new array
-$arr_image_details = [];
+  $arr_image_details = [];
 
 // Check image dimensions
-$image_dimensions = getimagesize($image["tmp_name"]);
-$image_width = $image_dimensions[0];
-$image_height = $image_dimensions[1];
+  $image_dimensions = getimagesize($image["tmp_name"]);
+  $image_width = $image_dimensions[0];
+  $image_height = $image_dimensions[1];
 
 // Image orientation
-$image_orientation = ($image_width > $image_height)? "Landscape": "Portait";
+  $image_orientation = ($image_width > $image_height)? "Landscape": "Portait";
 
 
-if (!file_exists('images')) {
-    mkdir('images', 0777, true);
-}
+  if (!file_exists('images')) {
+  	mkdir('images', 0777, true);
+  }
 
 
 // Move to images directory
-move_uploaded_file($image['tmp_name'], 'images/ '. $image['name']);
+  move_uploaded_file($image['tmp_name'], 'images/ '. $image['name']);
 
 // Push details to array
-array_push($arr_image_details, dirname(__FILE__).'\images\\' . $image['name']);
-array_push($arr_image_details, $image_orientation);
+  array_push($arr_image_details, dirname(__FILE__).'\images\\' . $image['name']);
+  array_push($arr_image_details, $image_orientation);
 
 // Serialize array for mySql
-serialize($arr_image_details);
+  serialize($arr_image_details);
 
 // Return array
-return $arr_image_details;
+  return $arr_image_details;
 
 
 }

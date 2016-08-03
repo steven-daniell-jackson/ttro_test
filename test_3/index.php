@@ -23,8 +23,8 @@
 	<input type="text" name="hobbies"><br>
 
 	<label for="">Image</label><br>
-	<input type="file" accept="" name="image"><br>
-	<!-- <input type="file" accept=".jpeg, .png, .JPG, .PNG" name="image"><br> -->
+	<!-- <input type="file" accept="" name="image"><br> -->
+	<input type="file" accept=".jpeg, .png, .JPG, .PNG" name="image"><br>
 
 <p class="error"><?php ?></p>
 
