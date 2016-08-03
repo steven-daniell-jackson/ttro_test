@@ -2,24 +2,17 @@
 
 /*
 **************************
-	FUNCTIONS
-**************************
-*/
-
-
-/*
-**************************
 	IMAGE VALIDATION
 **************************
 */
 
 
-/****************************************************************************
+/*****************************************************************************
  Additional layer of error handling incase the input in the DOM is modified 
  *****************************************************************************/
  function image_extension_validator ($image){
 
-	// Acceptable file types
+	// Acceptable file types (Can be move to global is required)
  	$arr_image_extension = ['jpg','png'];
 
 
@@ -36,14 +29,71 @@
  		exit();
  	}
 
+ 	return $extension;
+
  }
 
 
+/*****************************************************************************
+ FIX - Scale Image height to 200 
+ *****************************************************************************/
+ function image_resize($width, $height, $target) {
+
+ 	$arr_return = [];
+
+//takes the larger size of the width and height and applies the
+
+ 		$percentage = ($target / $height);
+
+//gets the new value and applies the percentage, then rounds the value
+ 	$width = round($width * $percentage);
+ 	$height = round($height * $percentage);
+
+//returns the new sizes in html image tag format...this is so you
+
+ 	array_push($arr_return, $width);
+ 	array_push($arr_return, $height);
+
+ 	return $arr_return;
+
+ }
 
 
-/****************************
+/**********************************************
+  RESIZE IMAGE AND COPY TO IMAGES DIRECTORY 
+  *********************************************/
+ function image_resize_and_copy($image_width, $image_height, $image_temp_path, $image_new_path, $extension){
+
+ 	$arr_resized_image_dimensions = image_resize($image_width, $image_height, 200);
+
+ 	if ($extension == "png") {
+	// Resize image and save to '/images/' directory
+ 		$src = imagecreatefrompng($image_temp_path);
+ 		$tmp = imagecreatetruecolor($arr_resized_image_dimensions[0],$arr_resized_image_dimensions[1]);
+ 		imagecopyresampled($tmp,$src,0,0,0,0,$arr_resized_image_dimensions[0],$arr_resized_image_dimensions[1], $image_width,$image_height);
+ 		imagepng($tmp, $image_new_path ,3);
+
+ 	} else {
+
+ 		// Resize image and save to '/images/' directory
+ 		$src = imagecreatefromjpeg($image_temp_path);
+ 		$tmp = imagecreatetruecolor($arr_resized_image_dimensions[0],$arr_resized_image_dimensions[1]);
+ 		imagecopyresampled($tmp,$src,0,0,0,0,$arr_resized_image_dimensions[0],$arr_resized_image_dimensions[1], $image_width,$image_height);
+ 		imagejpeg($tmp, $image_new_path ,3);
+ 	}
+
+
+
+// Debug
+ 	print_r($arr_resized_image_dimensions);
+
+
+
+ }
+
+/******************************
   SIZE VALIDATION FUNCTION 
-  *****************************/
+  *******************************/
 
   function image_file_size($image){
 
