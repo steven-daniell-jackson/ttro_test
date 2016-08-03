@@ -1,7 +1,7 @@
 <?php 
 /*
 ASSUMPTION:
-Not sure what the input type is so I just created an simple array which contains the original words.
+Not sure what the input type is so I just created an json array which contains the original words.
 Used a decoded json array for the example.
 
 
