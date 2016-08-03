@@ -1,10 +1,71 @@
 <?php 
 
 /*
+****************************************************
+
+			IMAGE VALIDATION FUNCTIONS
+
+****************************************************
+*/
+
+/*
 **************************
-	IMAGE VALIDATION
+	MAIN FUNCTION
 **************************
 */
+
+function image_validation($image) {
+
+/****************************************************************************
+ Additional layer of error handling incase the input in the DOM is modified 
+ *****************************************************************************/
+ // Located in functions.php
+ $image_extension = image_extension_validator ($image);
+
+/*****************************
+  SIZE VALIDATION FUNCTION 
+  ****************************/
+  // See below
+  image_file_size($image);
+
+
+// Variables
+  $image_new_path = dirname(__FILE__).'\images\\' . $image['name'];
+  $image_temp_path = $image['tmp_name'];
+  $arr_image_details = [];
+
+// Check image dimensions
+  $image_dimensions = getimagesize($image["tmp_name"]);
+  $image_width = $image_dimensions[0];
+  $image_height = $image_dimensions[1];
+
+
+
+// Create /images/ directory if it does not exist
+  if (!file_exists('images')) {
+  	mkdir('images', 0777, true);
+  }
+
+/**********************************************
+  RESIZE IMAGE AND COPY TO IMAGES DIRECTORY 
+  *********************************************/
+  // LSee below
+  image_resize_and_copy($image_width, $image_height, $image_temp_path, $image_new_path, $image_extension);
+
+
+// Image orientation
+  $image_orientation = ($image_width > $image_height)? "Landscape": "Portait";
+
+
+// Push details to array
+  array_push($arr_image_details, $image_new_path);
+  array_push($arr_image_details, $image_orientation);
+
+// Return array
+  return $arr_image_details;
+
+
+}
 
 
 /*****************************************************************************
@@ -34,64 +95,65 @@
  }
 
 
-/*****************************************************************************
- FIX - Scale Image height to 200 
- *****************************************************************************/
- function image_resize($width, $height, $target) {
+/********************************
+  Scale Image height to 200 
+ ********************************/
+  function image_resize($width, $height, $target) {
 
- 	$arr_return = [];
+  	$arr_return = [];
 
-//takes the larger size of the width and height and applies the
+	//Gets the ratio of the the height
 
- 		$percentage = ($target / $height);
+  	$percentage = ($target / $height);
 
-//gets the new value and applies the percentage, then rounds the value
- 	$width = round($width * $percentage);
- 	$height = round($height * $percentage);
+	//Gets the new value and applies the percentage, then rounds the value
+  	$width = round($width * $percentage);
+  	$height = round($height * $percentage);
 
-//returns the new sizes in html image tag format...this is so you
+	//Push to Array
 
- 	array_push($arr_return, $width);
- 	array_push($arr_return, $height);
+  	array_push($arr_return, $width);
+  	array_push($arr_return, $height);
 
- 	return $arr_return;
+	//Return Array
+  	return $arr_return;
 
- }
+  }
 
 
 /**********************************************
   RESIZE IMAGE AND COPY TO IMAGES DIRECTORY 
   *********************************************/
- function image_resize_and_copy($image_width, $image_height, $image_temp_path, $image_new_path, $extension){
+  function image_resize_and_copy($image_width, $image_height, $image_temp_path, $image_new_path, $extension){
 
- 	$arr_resized_image_dimensions = image_resize($image_width, $image_height, 200);
+  	$arr_resized_image_dimensions = image_resize($image_width, $image_height, 200);
 
- 	if ($extension == "png") {
+  	if ($extension == "png") {
 	// Resize image and save to '/images/' directory
- 		$src = imagecreatefrompng($image_temp_path);
- 		$tmp = imagecreatetruecolor($arr_resized_image_dimensions[0],$arr_resized_image_dimensions[1]);
- 		imagecopyresampled($tmp,$src,0,0,0,0,$arr_resized_image_dimensions[0],$arr_resized_image_dimensions[1], $image_width,$image_height);
- 		imagepng($tmp, $image_new_path ,3);
+  		$src = imagecreatefrompng($image_temp_path);
+  		$tmp = imagecreatetruecolor($arr_resized_image_dimensions[0],$arr_resized_image_dimensions[1]);
+  		imagecopyresampled($tmp,$src,0,0,0,0,$arr_resized_image_dimensions[0],$arr_resized_image_dimensions[1], $image_width,$image_height);
+  		imagepng($tmp, $image_new_path ,3);
 
- 	} else {
+  	} else {
 
  		// Resize image and save to '/images/' directory
- 		$src = imagecreatefromjpeg($image_temp_path);
- 		$tmp = imagecreatetruecolor($arr_resized_image_dimensions[0],$arr_resized_image_dimensions[1]);
- 		imagecopyresampled($tmp,$src,0,0,0,0,$arr_resized_image_dimensions[0],$arr_resized_image_dimensions[1], $image_width,$image_height);
- 		imagejpeg($tmp, $image_new_path ,3);
- 	}
+  		$src = imagecreatefromjpeg($image_temp_path);
+  		$tmp = imagecreatetruecolor($arr_resized_image_dimensions[0],$arr_resized_image_dimensions[1]);
+  		imagecopyresampled($tmp,$src,0,0,0,0,$arr_resized_image_dimensions[0],$arr_resized_image_dimensions[1], $image_width,$image_height);
+  		imagejpeg($tmp, $image_new_path ,3);
+  	}
 
 
 
 // Debug
- 	print_r($arr_resized_image_dimensions);
+  	// print_r($arr_resized_image_dimensions);
 
 
 
- }
+  }
 
-/******************************
+/********************************
   SIZE VALIDATION FUNCTION 
   *******************************/
 
@@ -108,6 +170,14 @@
   }
 
 
+/*
+****************************************************
+
+			END IMAGE VALIDATION FUNCTIONS
+
+****************************************************
+*/
+
 
 
 /*
@@ -116,14 +186,54 @@
 **************************
 */
 
+
+function sql_write_entry($email, $password, $arr_hobbies, $arr_image_details, $confirm_number){
+
+$arr_hobbies = implode($arr_hobbies, ',');
+$arr_image_details = implode($arr_image_details, ','); 
+
+echo "here";
+echo $confirm_number;
+
+echo($arr_image_details);
+
+print_r($arr_hobbies);
+print_r($arr_image_details);
+
+// Create instance of MySQLi
+$mysqli = new mysqli(DB_HOST, DB_USER, DB_PASSWORD, DB_NAME);
+
+// /* check connection */
+if ($mysqli->connect_errno) {
+	printf("Connect failed: %s\n", $mysqli->connect_error);
+	exit();
+}
+
+/* Create table if it does not exist  */
+$mysqli->query("CREATE TABLE IF NOT EXISTS " . DB_TABLE . " (
+user_id INT AUTO_INCREMENT,
+  email VARCHAR(45) DEFAULT NULL,
+  password VARCHAR(45) DEFAULT NULL,
+  hobbies VARCHAR(45) DEFAULT NULL,
+  image_details VARCHAR(45) DEFAULT NULL,
+  confirm_number VARCHAR(45) DEFAULT NULL,
+  active BOOLEAN DEFAULT NULL,
+  PRIMARY KEY (user_id) )"
+  );
+
+
 // Insert entry into database
-// $mysqli->query("
-// 	INSERT INTO entries(user_id, email, password, hobbies, image_details, confirm_number, active) 
-// 	VALUES (NULL, '$email', '$password', '$hobbies', '$image', '123', '0' )
-// 	");
+$mysqli->query("
+	INSERT INTO entries(user_id, email, password, hobbies, image_details, confirm_number, active) 
+	VALUES (NULL, '$email', '$password', '$arr_hobbies', '$arr_image_details', '$confirm_number', '0' )
+	");
 
 // Close connection
-// $mysqli->close();
+$mysqli->close();
+
+}
+
+
 
 
 
@@ -182,6 +292,11 @@ function gen_rand_confirm_link($length) {
 
 	// Return value
 	return $str;
+}
+
+
+function serialize_array($array){
+$array = serialize($array);
 }
 
 ?>
